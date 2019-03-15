@@ -158,6 +158,10 @@ suite('AbstractKeybindingService', () => {
 							statusMessageCallsDisposed.push(message);
 						}
 					};
+				},
+				selectBackgroundColor(color: string) {
+					// FIXME: improve and add tests
+					return {dispose(){}};
 				}
 			};
 

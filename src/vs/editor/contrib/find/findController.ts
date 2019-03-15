@@ -619,7 +619,7 @@ export class StartFindReplaceAction extends EditorAction {
 		if (editor.getConfiguration().readOnly) {
 			return;
 		}
-
+		
 		let controller = CommonFindController.get(editor);
 		let currentSelection = editor.getSelection();
 		// we only seed search string from selection when the current selection is single line and not empty.

@@ -5789,6 +5789,7 @@ declare module 'vscode' {
 		 */
 		export function registerWebviewPanelSerializer(viewType: string, reviver: WebviewPanelSerializer): Disposable;
 
+		export function setStatusBarBackground(color: string): Disposable;
 		/**
 		 * Set a message to the status bar. This is a short hand for the more powerful
 		 * status bar [items](#window.createStatusBarItem).

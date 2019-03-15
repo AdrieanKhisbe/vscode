@@ -72,4 +72,6 @@ export interface IStatusbarService {
 	 * Prints something to the status bar area with optional auto dispose and delay.
 	 */
 	setStatusMessage(message: string, autoDisposeAfter?: number, delayBy?: number): IDisposable;
+
+	selectBackgroundColor(color: string) : IDisposable
 }

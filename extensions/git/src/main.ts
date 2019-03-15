@@ -123,7 +123,9 @@ export function activate(context: ExtensionContext): API {
 		activatePromise = eventToPromise(onEnabled)
 			.then(() => _activate(context, disposables));
 	}
-
+	commands.registerCommand('red.alert', function(){
+		window.setStatusBarBackground('#FF1111')
+	});
 	const modelPromise = activatePromise
 		.then(model => model || Promise.reject<Model>('Git model not found'));
 

@@ -409,6 +409,9 @@ export function createApiFactory(
 			setStatusBarMessage(text: string, timeoutOrThenable?: number | Thenable<any>): vscode.Disposable {
 				return extHostStatusBar.setStatusBarMessage(text, timeoutOrThenable);
 			},
+			setStatusBarBackground(color: string): vscode.Disposable {
+				return extHostStatusBar.setStatusBarBackground(color);
+			},
 			withScmProgress<R>(task: (progress: vscode.Progress<number>) => Thenable<R>) {
 				console.warn(`[Deprecation Warning] function 'withScmProgress' is deprecated and should no longer be used. Use 'withProgress' instead.`);
 				return extHostProgress.withProgress(extension, { location: extHostTypes.ProgressLocation.SourceControl }, (progress, token) => task({ report(n: number) { /*noop*/ } }));

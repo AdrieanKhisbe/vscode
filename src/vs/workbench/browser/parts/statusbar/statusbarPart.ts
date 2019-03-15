@@ -217,6 +217,14 @@ export class StatusbarPart extends Part implements IStatusbarService {
 
 		return dispose;
 	}
+
+	public selectBackgroundColor(color: string) : IDisposable {
+		console.log('youhou jai fait otu le chemin', color)
+		console.log($('#workbench.parts.statusbar'));
+		//$('#workbench.parts.statusbar').style('background-color', color);
+		document.getElementById('workbench.parts.statusbar').style.backgroundColor = color;
+		return {dispose: () => {}};
+	}
 }
 
 let manageExtensionAction: ManageExtensionAction;

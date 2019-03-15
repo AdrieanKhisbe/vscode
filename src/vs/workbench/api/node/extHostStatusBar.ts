@@ -156,15 +156,44 @@ class StatusBarMessage {
 		}
 	}
 }
+class StatusBarBackground {
+	// §FIXMe: maybe to kill
+	/// FIXME extend to style
+	private _color: string;
+	private _statusBar: ExtHostStatusBar;
+
+	constructor(statusBar: ExtHostStatusBar) {
+		console.log(Object.keys(statusBar))
+		this._statusBar = statusBar;
+		//this._item = statusBar.createStatusBarEntry(void 0, ExtHostStatusBarAlignment.Left, Number.MIN_VALUE);
+	}
+
+	dispose() {
+	}
+
+	setBackground(color: string): Disposable {
+		this._color = color;
+		this._update();
+
+		return new Disposable(() => {});
+	}
+
+	private _update() {
+		console.log(this._color);
+		this._statusBar._proxy.$setBackground(this._color);
+	}
+}
 
 export class ExtHostStatusBar {
 
 	private _proxy: MainThreadStatusBarShape;
 	private _statusMessage: StatusBarMessage;
+	private _statusBarBackground: StatusBarBackground;
 
 	constructor(mainContext: IMainContext) {
 		this._proxy = mainContext.getProxy(MainContext.MainThreadStatusBar);
 		this._statusMessage = new StatusBarMessage(this);
+		this._statusBarBackground = new StatusBarBackground(this);
 	}
 
 	createStatusBarEntry(extensionId: string, alignment?: ExtHostStatusBarAlignment, priority?: number): StatusBarItem {
@@ -186,5 +215,10 @@ export class ExtHostStatusBar {
 			d.dispose();
 			clearTimeout(handle);
 		});
+	}
+
+	setStatusBarBackground(color: string): Disposable {
+		this._statusBarBackground.setBackground(color);
+		return new Disposable(()=> {});
 	}
 }

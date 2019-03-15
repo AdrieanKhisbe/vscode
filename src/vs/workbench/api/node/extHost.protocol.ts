@@ -341,6 +341,7 @@ export interface MainThreadQuickOpenShape extends IDisposable {
 
 export interface MainThreadStatusBarShape extends IDisposable {
 	$setEntry(id: number, extensionId: string, text: string, tooltip: string, command: string, color: string | ThemeColor, alignment: MainThreadStatusBarAlignment, priority: number): void;
+	$setBackground(color: string): void;
 	$dispose(id: number): void;
 }
 
