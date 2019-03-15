@@ -165,12 +165,12 @@ class StatusBarBackground {
 		this._statusBar = statusBar;
 	}
 
-	dispose() { }
-
 	setBackground(color: string): Disposable {
 		this._color = color;
 		this._update();
-		return new Disposable(() => { });
+		return new Disposable(() => {
+			this._statusBar.updateBackground(null);
+		 });
 	}
 
 	private _update() {
@@ -198,8 +198,7 @@ export class ExtHostStatusBar {
 	}
 
 	setStatusBarBackground(color: string): Disposable {
-		this._statusBarBackground.setBackground(color);
-		return new Disposable(() => { });
+		return this._statusBarBackground.setBackground(color);
 	}
 
 	setStatusBarMessage(text: string, timeoutOrThenable?: number | Thenable<any>): Disposable {

@@ -134,6 +134,16 @@ export async function activate(context: ExtensionContext): Promise<GitExtension>
 	const config = workspace.getConfiguration('git', null);
 	const enabled = config.get<boolean>('enabled');
 
+	commands.registerCommand('blue.alert', function(){
+		const d = window.setStatusBarBackground('#1112FE');
+		setTimeout(() => {
+			return d.dispose();
+		}, 5000);
+	});
+	commands.registerCommand('red.alert', function(){
+		window.setStatusBarBackground('#FF1111');
+	});
+
 	if (!enabled) {
 		const onConfigChange = filterEvent(workspace.onDidChangeConfiguration, e => e.affectsConfiguration('git'));
 		const onEnabled = filterEvent(onConfigChange, () => workspace.getConfiguration('git', null).get<boolean>('enabled') === true);
