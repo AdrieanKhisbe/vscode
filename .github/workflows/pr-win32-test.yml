@@ -66,7 +66,7 @@ jobs:
   electron-unit:
     name: Electron-Unit
     if: ${{ inputs.electron_unit_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-unit
       ELECTRON_TESTS: 'true'
@@ -458,7 +458,7 @@ jobs:
   electron:
     name: Electron
     if: ${{ inputs.electron_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron
       ELECTRON_TESTS: 'true'
@@ -475,7 +475,7 @@ jobs:
   agent-host-e2e-1:
     name: Agent-Host-E2E (shard 1/2)
     if: ${{ inputs.agent_host_e2e_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-agent-host-e2e-1
       ELECTRON_TESTS: 'true'
@@ -488,7 +488,7 @@ jobs:
   agent-host-e2e-2:
     name: Agent-Host-E2E (shard 2/2)
     if: ${{ inputs.agent_host_e2e_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-agent-host-e2e-2
       ELECTRON_TESTS: 'true'
@@ -505,12 +505,7 @@ jobs:
   electron-smoke-1:
     name: Electron-Smoke (shard 1/3)
     if: ${{ inputs.electron_smoke_affected }}
-    # GitHub-hosted Windows runners intermittently freeze while WSL2 provisions a distribution
-    # (https://github.com/actions/runner-images/issues/14938): the step timeout never fires, no log is
-    # kept, and the job only fails when GitHub notices that it lost the runner, about 45 minutes later.
-    # That happened in 3 of about 90 runs of the WSL smoke test shard on the larger runners, and in none
-    # of about 740 on the 1ES pool, so this shard runs on the 1ES pool. JobId must be unique per job.
-    runs-on: [ self-hosted, 1ES.Pool=1es-vscode-oss-windows-2022-x64, "JobId=windows-test-wsl-smoke-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}" ]
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-smoke-shard1
       ELECTRON_TESTS: 'true'
@@ -522,7 +517,7 @@ jobs:
   electron-smoke-2:
     name: Electron-Smoke (shard 2/3)
     if: ${{ inputs.electron_smoke_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-smoke-shard2
       ELECTRON_TESTS: 'true'
@@ -534,7 +529,7 @@ jobs:
   electron-smoke-3:
     name: Electron-Smoke (shard 3/3)
     if: ${{ inputs.electron_smoke_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: electron-smoke-shard3
       ELECTRON_TESTS: 'true'
@@ -546,7 +541,7 @@ jobs:
   browser-unit:
     name: Browser-Unit
     if: ${{ inputs.browser_unit_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: browser-unit
       BROWSER_TESTS: 'true'
@@ -557,7 +552,7 @@ jobs:
   browser:
     name: Browser
     if: ${{ inputs.browser_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: browser
       BROWSER_TESTS: 'true'
@@ -570,7 +565,7 @@ jobs:
   remote-integration:
     name: Remote (integration)
     if: ${{ inputs.remote_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: remote
       REMOTE_TESTS: 'true'
@@ -580,7 +575,7 @@ jobs:
   remote-smoke:
     name: Remote (smoke)
     if: ${{ inputs.remote_affected }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     env:
       ARTIFACT_NAME: remote-smoke
       REMOTE_TESTS: 'true'

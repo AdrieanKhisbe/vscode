@@ -1,6 +1,9 @@
 name: Code OSS
 
 on:
+  push:
+    branches:
+      - '**-test'
   pull_request:
     branches:
       - main
@@ -112,6 +115,7 @@ jobs:
           key: ${{ steps.cache-ripple.outputs.cache-primary-key }}
 
       - name: Plan tests
+        if: github.event_name == 'pull_request'
         id: plan
         continue-on-error: true
         timeout-minutes: 5
@@ -210,15 +214,17 @@ jobs:
     name: Compile & Hygiene
     needs: changes
     if: ${{ !cancelled() }}
-    runs-on: [ self-hosted, 1ES.Pool=1es-vscode-oss-ubuntu-22.04-x64, "JobId=compile-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}" ]
+    runs-on: ubuntu-24.04
     env:
       # Hygiene and ESLint check only the files that changed since this commit, unless
       # a change can affect other files (see build/lib/changedFiles.ts). The full checks
       # run in the scheduled and manual product builds.
-      PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
     steps:
       - name: Checkout microsoft/vscode
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
 
       # Without the base commit, hygiene and ESLint check every file.
       - name: Fetch pull request base
@@ -310,7 +316,7 @@ jobs:
           git fetch --no-tags --depth=1 origin "$CODEX_SYNC_BASE" || true
           node build/codex/check-protocol-sync.ts --if-changed --base "$CODEX_SYNC_BASE"
         env:
-          CODEX_SYNC_BASE: ${{ github.event.pull_request.base.sha }}
+          CODEX_SYNC_BASE: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
 
       - name: Check cyclic dependencies
         run: node build/lib/checkCyclicDependencies.ts out-build
@@ -524,7 +530,7 @@ jobs:
     name: Copilot - Check Test Cache
     needs: changes
     if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.copilot == 'true') }}
-    runs-on: [ self-hosted, 1ES.Pool=1es-vscode-oss-ubuntu-22.04-x64, "JobId=copilot-check-test-cache-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}" ]
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       pull-requests: read
@@ -571,7 +577,7 @@ jobs:
     name: Copilot - Check Telemetry
     needs: changes
     if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.copilot == 'true') }}
-    runs-on: [ self-hosted, 1ES.Pool=1es-vscode-oss-ubuntu-22.04-x64, "JobId=copilot-check-telemetry-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}" ]
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -592,7 +598,7 @@ jobs:
     name: Copilot - Test (Linux)
     needs: changes
     if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.copilot == 'true') }}
-    runs-on: [ self-hosted, 1ES.Pool=1es-vscode-oss-ubuntu-22.04-x64, "JobId=copilot-linux-tests-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}" ]
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -692,7 +698,7 @@ jobs:
     name: Copilot - Test (Windows)
     needs: changes
     if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.copilot == 'true') }}
-    runs-on: vscode-large-runners-windows-8-core
+    runs-on: windows-2025
     permissions:
       contents: read
     steps:
