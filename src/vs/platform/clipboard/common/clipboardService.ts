@@ -14,8 +14,9 @@ export interface IClipboardService {
 
 	/**
 	 * Trigger the paste. Returns undefined if the paste was not triggered or a promise that resolves on paste end.
+	 * @param asPlainText Insert clipboard text directly through the native editor instead of dispatching a paste command.
 	 */
-	triggerPaste(targetWindowId: number): Promise<void> | undefined;
+	triggerPaste(targetWindowId: number, asPlainText?: boolean): Promise<void> | undefined;
 
 	/**
 	 * Writes text to the system clipboard.
