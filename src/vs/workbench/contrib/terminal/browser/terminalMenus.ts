@@ -631,7 +631,8 @@ export function setupTerminalMenus(): void {
 						id: TerminalCommandId.RenameActiveTab,
 						title: localize('workbench.action.terminal.renameInstance', "Rename...")
 					},
-					group: TerminalContextMenuGroup.Edit
+					group: TerminalContextMenuGroup.Edit,
+					order: 4
 				}
 			},
 			{
@@ -641,7 +642,8 @@ export function setupTerminalMenus(): void {
 						id: TerminalCommandId.ChangeIconActiveTab,
 						title: localize('workbench.action.terminal.changeIcon', "Change Icon...")
 					},
-					group: TerminalContextMenuGroup.Edit
+					group: TerminalContextMenuGroup.Edit,
+					order: 1
 				}
 			},
 			{
@@ -651,7 +653,19 @@ export function setupTerminalMenus(): void {
 						id: TerminalCommandId.ChangeColorActiveTab,
 						title: localize('workbench.action.terminal.changeColor', "Change Color...")
 					},
-					group: TerminalContextMenuGroup.Edit
+					group: TerminalContextMenuGroup.Edit,
+					order: 2
+				}
+			},
+			{
+				id: MenuId.TerminalTabContext,
+				item: {
+					command: {
+						id: TerminalCommandId.CopyInstanceId,
+						title: localize('workbench.action.terminal.copyInstanceId', "Copy Terminal ID")
+					},
+					group: TerminalContextMenuGroup.Edit,
+					order: 3
 				}
 			},
 			{
@@ -661,7 +675,8 @@ export function setupTerminalMenus(): void {
 						id: TerminalCommandId.SizeToContentWidth,
 						title: terminalStrings.toggleSizeToContentWidth
 					},
-					group: TerminalContextMenuGroup.Edit
+					group: TerminalContextMenuGroup.Edit,
+					order: 5
 				}
 			},
 			{
