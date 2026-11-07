@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import * as browser from '../../../../base/browser/browser.js';
-import { getActiveDocument, getActiveWindow } from '../../../../base/browser/dom.js';
+import { getActiveDocument, getActiveElement, getActiveWindow, isHTMLInputElement, isHTMLTextAreaElement } from '../../../../base/browser/dom.js';
 import { KeyCode, KeyMod } from '../../../../base/common/keyCodes.js';
 import * as platform from '../../../../base/common/platform.js';
 import * as nls from '../../../../nls.js';
@@ -342,7 +342,12 @@ if (PasteAction) {
 	PasteAction.addImplementation(0, 'generic-dom', (accessor: ServicesAccessor, args: unknown) => {
 		const logService = accessor.get(ILogService);
 		logService.trace('registerExecCommandImpl (addImplementation generic-dom for : paste)');
-		const triggerPaste = accessor.get(IClipboardService).triggerPaste(getActiveWindow().vscodeWindowId);
+		const activeElement = getActiveElement();
+		// Only desktop macOS needs this workaround for duplicate native paste; browsers use their regular paste handling.
+		const asPlainText = platform.isNative && platform.isMacintosh
+			? isHTMLInputElement(activeElement) || isHTMLTextAreaElement(activeElement)
+			: false;
+		const triggerPaste = accessor.get(IClipboardService).triggerPaste(getActiveWindow().vscodeWindowId, asPlainText);
 		return triggerPaste ?? false;
 	});
 }

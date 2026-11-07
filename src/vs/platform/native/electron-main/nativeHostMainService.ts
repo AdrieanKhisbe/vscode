@@ -1098,10 +1098,17 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
 		return clipboardText;
 	}
 
-	async triggerPaste(windowId: number | undefined, options?: INativeHostOptions): Promise<void> {
+	async triggerPaste(windowId: number | undefined, options?: INativeHostOptions & { asPlainText?: boolean }): Promise<void> {
 		this.logService.trace(`Triggering paste in window ${windowId} with options:`, options);
 		const window = this.windowById(options?.targetWindowId, windowId);
-		return window?.win?.webContents.paste() ?? Promise.resolve();
+		if (options?.asPlainText) {
+			const text = clipboard.readText();
+			if (text) {
+				await window?.win?.webContents.insertText(text);
+			}
+			return;
+		}
+		window?.win?.webContents.paste();
 	}
 
 	async readImage(): Promise<Uint8Array> {

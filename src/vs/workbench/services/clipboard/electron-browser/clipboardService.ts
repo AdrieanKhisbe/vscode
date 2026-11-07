@@ -22,9 +22,9 @@ export class NativeClipboardService implements IClipboardService {
 		@ILogService private readonly logService: ILogService
 	) { }
 
-	async triggerPaste(targetWindowId: number): Promise<void> {
+	async triggerPaste(targetWindowId: number, asPlainText?: boolean): Promise<void> {
 		this.logService.trace('NativeClipboardService#triggerPaste called');
-		return this.nativeHostService.triggerPaste({ targetWindowId });
+		return this.nativeHostService.triggerPaste({ targetWindowId, asPlainText });
 	}
 
 	async readImage(): Promise<Uint8Array> {
