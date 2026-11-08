@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'assert';
+import { isNative, isMacintosh } from '../../../../../base/common/platform.js';
+import { PasteAction } from '../../../../../editor/contrib/clipboard/browser/clipboard.js';
 import { spy, stub } from 'sinon';
 import { IContextMenuDelegate } from '../../../../../base/browser/contextmenu.js';
 import { addDisposableListener } from '../../../../../base/browser/dom.js';
@@ -431,6 +433,33 @@ suite('IssueReporterOverlay', () => {
 			undone: markdown, draft: markdown,
 			submitted: true,
 		});
+	});
+
+	(isNative && isMacintosh ? test : test.skip)('preserves screenshot attachments when the native paste command targets the description', async () => {
+		const { editor, imports, instantiation } = createReporter({ issueBody: '' });
+		instantiation.stub(ICodeEditorService, { getFocusedCodeEditor: () => null });
+		const modes: (boolean | undefined)[] = [];
+		instantiation.stub(IClipboardService, {
+			triggerPaste: async (_windowId, asPlainText) => {
+				modes.push(asPlainText);
+				// The native text-insertion route cannot deliver clipboard files or a paste event.
+				if (!asPlainText) {
+					paste(editor, [new File(['screenshot'], 'screenshot.png', { type: 'image/png' })]);
+				}
+			}
+		});
+		editor.focus();
+		assert.ok(PasteAction);
+		await PasteAction.runCommand(instantiation, undefined);
+		const quickInput = document.createElement('div');
+		quickInput.className = 'quick-input-widget';
+		const input = document.createElement('input');
+		quickInput.appendChild(input);
+		document.body.appendChild(quickInput);
+		store.add(toDisposable(() => quickInput.remove()));
+		input.focus();
+		await PasteAction.runCommand(instantiation, undefined);
+		assert.deepStrictEqual({ imports: imports.map(request => request.file.name), value: editor.value, modes }, { imports: ['screenshot.png'], value: '', modes: [false, true] });
 	});
 
 	test('keeps pasted HTML inert when rendering the preview', async () => {

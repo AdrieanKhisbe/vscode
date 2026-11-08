@@ -343,9 +343,9 @@ if (PasteAction) {
 		const logService = accessor.get(ILogService);
 		logService.trace('registerExecCommandImpl (addImplementation generic-dom for : paste)');
 		const activeElement = getActiveElement();
-		// Only desktop macOS needs this workaround for duplicate native paste; browsers use their regular paste handling.
+		// Avoid duplicate native paste in desktop macOS quick inputs. Other controls retain paste events, including attachments.
 		const asPlainText = platform.isNative && platform.isMacintosh
-			? isHTMLInputElement(activeElement) || isHTMLTextAreaElement(activeElement)
+			? (isHTMLInputElement(activeElement) || isHTMLTextAreaElement(activeElement)) && !!activeElement.closest('.quick-input-widget')
 			: false;
 		const triggerPaste = accessor.get(IClipboardService).triggerPaste(getActiveWindow().vscodeWindowId, asPlainText);
 		return triggerPaste ?? false;
