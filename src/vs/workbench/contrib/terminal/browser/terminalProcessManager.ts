@@ -314,6 +314,7 @@ export class TerminalProcessManager extends Disposable implements ITerminalProce
 						os: this.os
 					});
 					const options: ITerminalProcessOptions = {
+						terminalId: shellLaunchConfig.strictEnv ? undefined : this._instanceId,
 						shellIntegration: {
 							enabled: this._configurationService.getValue(TerminalSettingId.ShellIntegrationEnabled),
 							suggestEnabled: this._configurationService.getValue(TerminalContribSettingId.SuggestEnabled),
@@ -552,6 +553,7 @@ export class TerminalProcessManager extends Disposable implements ITerminalProce
 		const env = await this._resolveEnvironment(backend, variableResolver, shellLaunchConfig);
 
 		const options: ITerminalProcessOptions = {
+			terminalId: shellLaunchConfig.strictEnv ? undefined : this._instanceId,
 			shellIntegration: {
 				enabled: this._configurationService.getValue(TerminalSettingId.ShellIntegrationEnabled),
 				suggestEnabled: this._configurationService.getValue(TerminalContribSettingId.SuggestEnabled),
